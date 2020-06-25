@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node tracker.js"
+    "start": "node base.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mysql": "^2.16.0",
-    "inquirer": "^6.3.1"
+    "console.table": "^0.10.0",
+    "inquirer": "^6.3.1",
+    "mysql": "^2.16.0"
   }
 }
