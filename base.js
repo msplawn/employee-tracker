@@ -148,61 +148,45 @@ function addEmployee() {
 }
 
 function updateRole() {
-    let allemp = [];
-    connection.query("SELECT * FROM employee", function(err, answer) {
+    connection.query("SELECT * FROM employee", function(err, employees) {
       // console.log(answer);
-      for (let i = 0; i < answer.length; i++) {
-        let employeeString =
-          answer[i].id + " " + answer[i].first_name + " " + answer[i].last_name;
-        allemp.push(employeeString);
-      }
+    //   for (let i = 0; i < answer.length; i++) {
+    //     let employeeString =
+    //       answer[i].id + " " + answer[i].first_name + " " + answer[i].last_name;
+    //     allemp.push(employeeString);
+    //   }
+      const choices = employees.map(o => {
+        return {value: o.id, name: `${o.first_name} ${o.last_name}`};
+      });
       // console.log(allemp)
   
       inquirer
         .prompt([
           {
-            type: "list",
+            type: "rawlist",
             name: "updateEmpRole",
             message: "select employee to update role",
-            choices: allemp
+            choices: choices
           },
           {
             type: "list",
             message: "select new role",
-            choices: ["Manager", "Bartender", "Server", "Host", "Chef"],
+            choices: [
+               {value: 1, name: "Manager"}, 
+                {value: 2, name: "Bartender"}, 
+                {value: 3, name: "Server"}, 
+                {value: 4, name: "Host"}, 
+                {value: 5, name: "Chef"}
+            ],
             name: "newrole"
           }
         ])
         .then(function(answer) {
-          console.log("about to update", answer);
-          const idToUpdate = {};
-          idToUpdate.employeeId = parseInt(answer.updateEmpRole.split(" ")[0]);
-          switch (answer.choices) {
-            case "Manager":
-                idToUpdate.role_id = 1;
-                break;
-            case "Bartender":
-                idToUpdate.role_id = 2;
-                break;
-            case "Server":
-                idToUpdate.role_id = 3;
-                break;
-            case "Host":
-                idToUpdate.role_id = 4;
-                break;
-            case "Chef":
-                idToUpdate.role_id = 5;
-                break;
-          }
-        //   if (answer.newrole === "manager") {
-        //     idToUpdate.role_id = 1;
-        //   } else if (answer.newrole === "employee") {
-        //     idToUpdate.role_id = 2;
-        //   }
-
+          console.log("about to update", answer, answer.newrole);
+        
           connection.query(
             "UPDATE employee SET role_id = ? WHERE id = ?",
-            [idToUpdate.role_id, idToUpdate.employeeId],
+            [answer.newrole, answer.updateEmpRole],
             function(err, answer) {
               viewEmployees();
             }
